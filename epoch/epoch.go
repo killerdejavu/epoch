@@ -29,11 +29,19 @@ func GetCurrentTime() int64 {
 }
 
 func DisplayDataForEpochTime(epochTime int64) {
+	ct := time.Now()
 	t := time.Unix(epochTime, 0)
 	millis := t.UnixNano() / 1000000
-
+	diff := ct.Sub(t)
+	var diffWord string
+	if diff > 0 {
+		diffWord = "in past"
+	} else {
+		diffWord = "in future"
+		diff = -diff
+	}
 	w := new(tabwriter.Writer)
-	w.Init(os.Stdout, 8, 8, 0, '\t', 0)
+	w.Init(os.Stdout, 8, 15, 0, '\t', 0)
 	defer w.Flush()
 
 	fmt.Fprintf(w, "epoch time: \t%d\n", t.Unix())
@@ -41,4 +49,5 @@ func DisplayDataForEpochTime(epochTime int64) {
 	fmt.Fprintf(w, "epoch time nano: \t%d\n", t.UnixNano())
 	fmt.Fprintf(w, "epoch time ISO: \t%s\n", t)
 	fmt.Fprintf(w, "epoch time ISO UTC: \t%s\n", t.UTC())
+	fmt.Fprintf(w, "relative to now: \t%s %s\n", diff, diffWord)
 }
