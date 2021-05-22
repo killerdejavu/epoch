@@ -1,6 +1,9 @@
-package getter
+package epoch
 
 import (
+	"fmt"
+	"os"
+	"text/tabwriter"
 	"time"
 )
 
@@ -23,4 +26,19 @@ func GetCurrentTime() int64 {
 	//fmt.Println(time.Unix(secs, 0))
 	//fmt.Println(time.Unix(0, nanos))
 	return secs
+}
+
+func DisplayDataForEpochTime(epochTime int64) {
+	t := time.Unix(epochTime, 0)
+	millis := t.UnixNano() / 1000000
+
+	w := new(tabwriter.Writer)
+	w.Init(os.Stdout, 8, 8, 0, '\t', 0)
+	defer w.Flush()
+
+	fmt.Fprintf(w, "epoch time: \t%d\n", t.Unix())
+	fmt.Fprintf(w, "epoch time millis: \t%d\n", millis)
+	fmt.Fprintf(w, "epoch time nano: \t%d\n", t.UnixNano())
+	fmt.Fprintf(w, "epoch time ISO: \t%s\n", t)
+	fmt.Fprintf(w, "epoch time ISO UTC: \t%s\n", t.UTC())
 }
